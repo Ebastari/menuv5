@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+
+import React from 'react';
 
 interface BottomNavProps {
   activeTab: string;
@@ -15,33 +16,19 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   userRole,
   onRequestLogin 
 }) => {
-  const [isMobile, setIsMobile] = useState(true);
-  const [isPressed, setIsPressed] = useState<string | null>(null);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 640);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   const navItems = [
-    { id: 'menu', icon: 'fa-bars', label: 'Menu' },
-    { id: 'kamera', icon: 'fa-camera', label: 'Kamera' },
-    { id: 'notifikasi-bibit', icon: 'fa-seedling', label: 'Notif Bibit' },
-    { id: 'profil', icon: 'fa-user', label: 'Profil', isAuthTrigger: true }
+    { id: 'home', icon: 'fa-house', label: 'Home' },
+    { id: 'peta', icon: 'fa-map-location-dot', label: 'Maps', external: 'https://ebastari.github.io/Realisasi-pekerjaan/Realisasi2025.html', isAdminOnly: true },
+    { id: 'montana', icon: 'fa-camera', label: 'Capture', external: 'https://kameracerdas2.vercel.app/', isAdminOnly: true },
+    { id: 'notif', icon: 'fa-bell', label: 'Alerts', external: 'https://ebastari.github.io/notifikasi/notif.html', isAdminOnly: true },
+    { id: 'profile', icon: isAuthenticated ? 'fa-user-gear' : 'fa-door-open', label: isAuthenticated ? 'Settings' : 'Login', isAuthTrigger: true }
   ];
 
   const handleNavClick = (item: any) => {
-    setIsPressed(item.id);
-    setTimeout(() => setIsPressed(null), 200);
-
     if (item.isAuthTrigger) {
       if (isAuthenticated) {
-        setActiveTab('profil');
+        setActiveTab('profile');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         onRequestLogin();
@@ -67,110 +54,45 @@ export const BottomNav: React.FC<BottomNavProps> = ({
     }
   };
 
-  if (!isMobile) return null;
-
   return (
-    <div 
-      className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 pt-2 pointer-events-none"
-      style={{ 
-        paddingBottom: 'env(safe-area-inset-bottom, 16px)',
-        paddingLeft: 'env(safe-area-inset-left, 16px)',
-        paddingRight: 'env(safe-area-inset-right, 16px)'
-      }}
-    >
-      {/* Floating Pill-Shaped Container */}
-      <div 
-        className="max-w-md mx-auto relative overflow-hidden
-          bg-white/80 dark:bg-slate-900/80
-          backdrop-blur-2xl
-          rounded-full
-          shadow-[0_8px_32px_rgba(0,0,0,0.12),0_4px_16px_rgba(0,0,0,0.08),0_0_0_1px_rgba(255,255,255,0.3)]
-          dark:shadow-[0_8px_32px_rgba(0,0,0,0.4),0_4px_16px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.1)]
-          border border-white/40 dark:border-white/10
-          pointer-events-auto
-          flex items-end justify-between px-2 py-2"
-      >
-        {/* Subtle gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent dark:from-white/5 pointer-events-none" />
+    <div className="fixed bottom-0 left-0 right-0 z-[100] p-4 pointer-events-none pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))]">
+      <div className="max-w-[540px] mx-auto bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl rounded-[38px] border border-white/40 dark:border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.3)] flex justify-around p-1.5 pointer-events-auto ring-1 ring-black/5 dark:ring-white/5 relative">
         
-        {/* Development indicator */}
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-emerald-500 text-white text-[8px] font-bold uppercase tracking-widest rounded-full shadow-lg z-20">
+        {/* Development Mode Indicator */}
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-emerald-600 text-white text-[7px] font-black uppercase tracking-[0.3em] rounded-full shadow-lg border border-white/20 whitespace-nowrap">
           Dev Active
         </div>
 
         {navItems.map((item) => {
-          const isCurrent = activeTab === item.id || (item.isAuthTrigger && activeTab === 'profil');
+          const isCurrent = activeTab === item.id || (item.isAuthTrigger && activeTab === 'profile');
           const isLocked = !isAuthenticated && !item.isAuthTrigger;
           const isRoleLocked = item.isAdminOnly && userRole === 'guest';
-          const isAnimating = isPressed === item.id;
           
           return (
             <button 
               key={item.id}
               onClick={() => handleNavClick(item)}
-              onTouchStart={() => setIsPressed(item.id)}
-              className={`
-                relative flex flex-col items-center justify-center
-                w-14 h-12 rounded-full
-                transition-all duration-300 ease-out
-                ${isAnimating ? 'scale-90' : 'scale-100'}
-                ${isLocked || isRoleLocked ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}
-                ${isCurrent ? 'text-emerald-500 dark:text-emerald-400' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400'}
-              `}
-              disabled={isLocked || isRoleLocked}
-              aria-label={item.label}
-              aria-current={isCurrent ? 'page' : undefined}
+              className={`flex flex-col items-center justify-center py-4 px-1 rounded-[28px] transition-all duration-300 relative flex-1 group active:scale-90 ${isCurrent ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white'} ${(isLocked || isRoleLocked) ? 'opacity-30' : 'opacity-100'}`}
             >
-              {/* Active state glow effect */}
               {isCurrent && (
-                <>
-                  {/* Outer glow */}
-                  <div className="absolute inset-0 rounded-full bg-emerald-400/20 dark:bg-emerald-400/15 blur-xl animate-pulse" />
-                  {/* Inner glow */}
-                  <div className="absolute inset-0 rounded-full bg-emerald-400/10 dark:bg-emerald-400/8 blur-md" />
-                </>
+                <div className="absolute inset-1 bg-emerald-500/10 dark:bg-emerald-400/20 rounded-[24px] transition-all animate-pulse-gentle"></div>
               )}
               
-              {/* Tap ripple effect */}
-              {isAnimating && (
-                <div className="absolute inset-0 rounded-full bg-emerald-400/30 animate-ping" />
-              )}
-
-              {/* Icon container */}
-              <div className="relative z-10">
-                <i 
-                  className={`fas ${item.icon} text-lg transition-all duration-300
-                    ${isCurrent 
-                      ? 'scale-110 drop-shadow-[0_2px_8px_rgba(16,185,129,0.5)]' 
-                      : isAnimating 
-                        ? 'scale-105' 
-                        : 'group-hover:scale-105'
-                    }
-                  `}
-                />
-                
-                {/* Lock indicator */}
+              <div className="relative mb-1">
+                <i className={`fas ${item.icon} text-[18px] transition-all duration-300 relative z-10 ${isCurrent ? 'scale-110 -translate-y-1 drop-shadow-[0_4px_10px_rgba(16,185,129,0.3)]' : 'group-hover:scale-110 group-hover:-translate-y-0.5'}`}></i>
                 {(isLocked || isRoleLocked) && (
-                  <div className="absolute -top-2 -right-2 w-4 h-4 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center">
-                    <i className="fas fa-lock text-[6px] text-slate-500 dark:text-slate-400" />
+                  <div className="absolute -top-1.5 -right-2 w-3.5 h-3.5 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center ring-2 ring-white dark:ring-slate-900 shadow-sm">
+                    <i className="fas fa-lock text-[6px] text-slate-400"></i>
                   </div>
                 )}
               </div>
 
-              {/* Label */}
-              <span 
-                className={`
-                  text-[9px] font-medium tracking-wide
-                  transition-all duration-300
-                  ${isCurrent ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1'}
-                `}
-              >
-                {item.label}
+              <span className={`text-[8px] font-black uppercase tracking-tight relative z-10 transition-all duration-300 ${isCurrent ? 'opacity-100 scale-100' : 'opacity-0 scale-90 -translate-y-1 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0'}`}>
+                  {item.label}
               </span>
 
-              {/* Active indicator dot */}
               {isCurrent && (
-                <div className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+                <div className="absolute bottom-1 w-1 h-1 bg-emerald-500 rounded-full"></div>
               )}
             </button>
           );
@@ -179,5 +101,3 @@ export const BottomNav: React.FC<BottomNavProps> = ({
     </div>
   );
 };
-
-export default BottomNav;

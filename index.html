@@ -12,6 +12,12 @@
     <meta name="author" content="PT Montana Wana Teknologi">
     <link rel="canonical" href="https://montana-tech.info/">
 
+    <!-- Performance Optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://montana-tech.info/">
@@ -26,7 +32,7 @@
     <meta property="twitter:description" content="Digitalisasi monitoring reklamasi dan nursery dengan presisi tinggi di PT Energi Batubara Lestari.">
     <meta property="twitter:image" content="https://i.ibb.co.com/29Gzw6k/montana-AI.jpg">
 
-    <!-- Google Identity Services for OAuth 2.0 -->
+    <!-- Google Identity Services -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <!-- SoftwareApplication Schema -->
@@ -119,8 +125,10 @@
             },
         }
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -153,7 +161,11 @@
         .theme-transition *, 
         .theme-transition *:before, 
         .theme-transition *:after {
-            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+            transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                        border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                        color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                        box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                        opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
                         transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
         

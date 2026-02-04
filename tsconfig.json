@@ -11,8 +11,7 @@
     ],
     "skipLibCheck": true,
     "types": [
-      "node",
-      "react"
+      "node"
     ],
     "moduleResolution": "bundler",
     "isolatedModules": true,
@@ -25,8 +24,6 @@
       ]
     },
     "allowImportingTsExtensions": true,
-    "noEmit": true,
-    "strict": true,
-    "noImplicitAny": false
+    "noEmit": true
   }
 }

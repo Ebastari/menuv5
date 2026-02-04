@@ -2,36 +2,36 @@
 import React from 'react';
 
 export const GamePromotionSection: React.FC = () => {
-  // 6 Foto asli dari aset yang diunggah
+  // 6 Foto asli dari link yang diberikan oleh user
   const photos = [
     {
-      src: "1.jpg.jpeg",
+      src: "https://i.ibb.co.com/PZphKq1K/pokemon1.jpg",
       label: "Simulation Core"
     },
     {
-      src: "2.jpg.jpeg",
+      src: "https://i.ibb.co.com/KcBMnh47/pokemon2.jpg",
       label: "Strategic Planning"
     },
     {
-      src: "3.jpg.jpeg",
+      src: "https://i.ibb.co.com/HTqTzXKm/pokemon3.jpg",
       label: "Ecosystem Analysis"
     },
     {
-      src: "4.jpg.jpeg",
+      src: "https://i.ibb.co.com/Y7pQ4MNP/pokemon4.jpg",
       label: "Target Mapping"
     },
     {
-      src: "5.jpg.jpeg",
+      src: "https://i.ibb.co.com/yBFmDstz/pokemon5.jpg",
       label: "Growth Engine"
     },
     {
-      src: "6.jpg.jpeg",
+      src: "https://i.ibb.co.com/Txk5KQKn/pokemon6.jpg",
       label: "Final Objective"
     }
   ];
 
   const handlePlayGame = () => {
-    window.open('https://pokemonkey1.vercel.app/', '_blank', 'noopener,noreferrer');
+    window.open('https://ebastari.github.io/pokemonkey-game/', '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -62,7 +62,7 @@ export const GamePromotionSection: React.FC = () => {
             </div>
           </div>
 
-          {/* 6 Photo Grid - Menggunakan Aset Lokal */}
+          {/* 6 Photo Grid - Menggunakan Aset Link User */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full mb-16">
             {photos.map((item, idx) => (
               <div 
@@ -75,7 +75,8 @@ export const GamePromotionSection: React.FC = () => {
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = `https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=800&auto=format&fit=crop`; // Fallback jika path lokal bermasalah
+                    // Fallback ke unslash jika link bermasalah
+                    target.src = `https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=800&auto=format&fit=crop`;
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
