@@ -163,6 +163,7 @@ export const Login: React.FC<LoginProps> = ({ onVerified, onClose }) => {
   const handleAdminLogin = () => {
     setLoginMethod('admin');
     setLoginError('');
+    setSelectedRole('admin');
     setFormData(prev => ({...prev, email: '', password: ''}));
     setCurrentStep('identity');
   };
@@ -356,7 +357,7 @@ export const Login: React.FC<LoginProps> = ({ onVerified, onClose }) => {
                 {loginMethod === 'admin' && <input type="password" placeholder="PASSWORD SISTEM" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} className="w-full p-5 bg-slate-50 dark:bg-slate-800 rounded-2xl text-xs font-black uppercase outline-none dark:text-white border border-slate-100 dark:border-slate-700" />}
               </div>
               <button onClick={() => {
-                if (loginMethod === 'admin' && formData.password !== 'kalimantan selatan') { 
+                if (loginMethod === 'admin' && formData.password !== 'kalimantan') { 
                   setLoginError('Password Salah'); 
                   return; 
                 }
