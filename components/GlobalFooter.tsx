@@ -48,6 +48,17 @@ export const GlobalFooter: React.FC<GlobalFooterProps> = ({ onOpenMontanaProfile
         <p className="text-[7px] font-bold text-slate-300 dark:text-slate-800 uppercase tracking-[0.2em]">
           Integrated Environment Management System • Version 4.5.0
         </p>
+        <p className="text-[8px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider mt-4">
+          Dengan mengunjungi situs ini berarti anda setuju untuk{" "}
+          <a 
+            href="https://www.montana-tech.info/privacy-policy.html" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-emerald-500 hover:text-emerald-400 underline underline-offset-2 decoration-emerald-500/30 transition-colors"
+          >
+            Kebijakan Privasi
+          </a>
+        </p>
       </div>
     </footer>
   );
