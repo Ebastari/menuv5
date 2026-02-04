@@ -39,6 +39,11 @@ export const Login: React.FC<LoginProps> = ({ onVerified, onClose }) => {
   const [currentStep, setCurrentStep] = useState<Step>('welcome');
   const [selectedRole, setSelectedRole] = useState<'admin' | 'guest'>('guest');
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  // Login method state: 'google' | 'email' | 'admin'
+  const [loginMethod, setLoginMethod] = useState<'google' | 'email' | 'admin' | null>(null);
+  const [loginError, setLoginError] = useState('');
+  const [showEmailLogin, setShowEmailLogin] = useState(false);
   
   // Data State
   const [formData, setFormData] = useState({ nama: '', email: '', telepon: '', password: '' });
@@ -127,6 +132,39 @@ export const Login: React.FC<LoginProps> = ({ onVerified, onClose }) => {
     setGps({ lat: -3.33, lon: 115.79, acc: 999, status: 'locked', msg: '📍 TERKUNCI (BYPASS)' });
     setShowBypassGps(false);
     setTimeout(() => setCurrentStep('facescan'), 800);
+  };
+
+  const handleEmailLogin = async () => {
+    setLoginError('');
+    setIsLoading(true);
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setLoginError('Format email tidak valid');
+      setIsLoading(false);
+      return;
+    }
+    
+    if (formData.password.length < 6) {
+      setLoginError('Password minimal 6 karakter');
+      setIsLoading(false);
+      return;
+    }
+    
+    // Simulate API call for email authentication
+    setTimeout(() => {
+      setLoginMethod('email');
+      setIsLoading(false);
+      setCurrentStep('whatsapp');
+    }, 800);
+  };
+
+  const handleAdminLogin = () => {
+    setLoginMethod('admin');
+    setLoginError('');
+    setFormData(prev => ({...prev, email: '', password: ''}));
+    setCurrentStep('identity');
   };
 
   const startFaceScan = async () => {
@@ -234,18 +272,74 @@ export const Login: React.FC<LoginProps> = ({ onVerified, onClose }) => {
                 <h2 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">Montana ID Sync</h2>
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em]">Smart Protocol V4.5</p>
               </div>
-              <div className="space-y-4">
-                <button onClick={() => { setSelectedRole('admin'); setCurrentStep('identity'); }} className="w-full p-6 bg-slate-900 dark:bg-emerald-600 text-white rounded-[24px] font-black uppercase text-xs shadow-2xl active:scale-95 transition-all">
-                  Login Administrator
-                </button>
-                <div className="flex items-center gap-4 py-2">
-                  <div className="flex-1 h-[1px] bg-slate-200 dark:bg-slate-800"></div>
-                  <span className="text-[9px] font-black text-slate-400 uppercase">Atau</span>
-                  <div className="flex-1 h-[1px] bg-slate-200 dark:bg-slate-800"></div>
+              
+              {/* Email Login Form */}
+              {showEmailLogin ? (
+                <div className="space-y-4 animate-fadeIn">
+                  <div className="space-y-3 text-left">
+                    <input 
+                      type="email" 
+                      placeholder="EMAIL" 
+                      value={formData.email} 
+                      onChange={e => setFormData({...formData, email: e.target.value})}
+                      className="w-full p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl text-xs font-black uppercase outline-none dark:text-white border border-slate-100 dark:border-slate-700"
+                    />
+                    <input 
+                      type="password" 
+                      placeholder="PASSWORD" 
+                      value={formData.password} 
+                      onChange={e => setFormData({...formData, password: e.target.value})}
+                      className="w-full p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl text-xs font-black uppercase outline-none dark:text-white border border-slate-100 dark:border-slate-700"
+                    />
+                    {loginError && (
+                      <p className="text-[10px] font-bold text-red-500 uppercase">{loginError}</p>
+                    )}
+                  </div>
+                  <button 
+                    onClick={handleEmailLogin}
+                    disabled={isLoading}
+                    className="w-full py-4 bg-emerald-600 disabled:bg-emerald-400 text-white rounded-[24px] font-black uppercase text-xs shadow-xl active:scale-95 transition-all"
+                  >
+                    {isLoading ? (
+                      <><i className="fas fa-spinner fa-spin mr-2"></i>Memproses...</>
+                    ) : (
+                      'Login dengan Email'
+                    )}
+                  </button>
+                  <button 
+                    onClick={() => { setShowEmailLogin(false); setLoginError(''); setFormData(prev => ({...prev, email: '', password: ''})); }}
+                    className="text-[10px] font-bold text-slate-400 uppercase tracking-widest"
+                  >
+                    Kembali
+                  </button>
                 </div>
-                <div ref={googleButtonRef} className="flex justify-center"></div>
-                <button onClick={onClose} className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-6">Akses Terbatas</button>
-              </div>
+              ) : (
+                <div className="space-y-4">
+                  <button 
+                    onClick={handleAdminLogin} 
+                    className="w-full p-6 bg-slate-900 dark:bg-emerald-600 text-white rounded-[24px] font-black uppercase text-xs shadow-2xl active:scale-95 transition-all"
+                  >
+                    Login Administrator
+                  </button>
+                  <div className="flex items-center gap-4 py-2">
+                    <div className="flex-1 h-[1px] bg-slate-200 dark:bg-slate-800"></div>
+                    <span className="text-[9px] font-black text-slate-400 uppercase">Atau</span>
+                    <div className="flex-1 h-[1px] bg-slate-200 dark:bg-slate-800"></div>
+                  </div>
+                  
+                  {/* Email Login Button */}
+                  <button 
+                    onClick={() => setShowEmailLogin(true)}
+                    className="w-full p-4 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-[24px] font-black uppercase text-xs shadow-lg border border-slate-200 dark:border-slate-700 active:scale-95 transition-all flex items-center justify-center gap-2"
+                  >
+                    <i className="fas fa-envelope"></i>
+                    Login dengan Email
+                  </button>
+                  
+                  <div ref={googleButtonRef} className="flex justify-center"></div>
+                  <button onClick={onClose} className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-6">Akses Terbatas</button>
+                </div>
+              )}
             </div>
           )}
 
@@ -259,12 +353,16 @@ export const Login: React.FC<LoginProps> = ({ onVerified, onClose }) => {
               <div className="space-y-3">
                 <input type="text" placeholder="NAMA LENGKAP" value={formData.nama} onChange={e => setFormData({...formData, nama: e.target.value})} className="w-full p-5 bg-slate-50 dark:bg-slate-800 rounded-2xl text-xs font-black uppercase outline-none dark:text-white border border-slate-100 dark:border-slate-700" />
                 <input type="email" placeholder="EMAIL KOORDINASI" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full p-5 bg-slate-50 dark:bg-slate-800 rounded-2xl text-xs font-black uppercase outline-none dark:text-white border border-slate-100 dark:border-slate-700" />
-                {selectedRole === 'admin' && <input type="password" placeholder="PASSWORD SISTEM" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} className="w-full p-5 bg-slate-50 dark:bg-slate-800 rounded-2xl text-xs font-black uppercase outline-none dark:text-white border border-slate-100 dark:border-slate-700" />}
+                {loginMethod === 'admin' && <input type="password" placeholder="PASSWORD SISTEM" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} className="w-full p-5 bg-slate-50 dark:bg-slate-800 rounded-2xl text-xs font-black uppercase outline-none dark:text-white border border-slate-100 dark:border-slate-700" />}
               </div>
               <button onClick={() => {
-                if (selectedRole === 'admin' && formData.password !== 'kalimantan selatan') { alert('Password Salah'); return; }
+                if (loginMethod === 'admin' && formData.password !== 'kalimantan selatan') { 
+                  setLoginError('Password Salah'); 
+                  return; 
+                }
                 if (formData.nama && formData.email) setCurrentStep('whatsapp');
               }} className="w-full py-6 bg-emerald-600 text-white rounded-[24px] font-black uppercase text-xs shadow-xl active:scale-95 transition-all">Lanjut</button>
+              {loginError && <p className="text-[10px] font-bold text-red-500 text-center uppercase">{loginError}</p>}
             </div>
           )}
 
